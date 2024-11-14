@@ -1,0 +1,1963 @@
+[
+    {
+        "id": "b530de30a6e7c3b1",
+        "type": "switch",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "property": "req.body.valor",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "lt",
+                "v": "250000000",
+                "vt": "num"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 410,
+        "y": 880,
+        "wires": [
+            [
+                "b024c8419492e3c1"
+            ],
+            [
+                "9b07c994e5d573ee"
+            ]
+        ]
+    },
+    {
+        "id": "b024c8419492e3c1",
+        "type": "function",
+        "z": "a435f4aaa9701cc9",
+        "name": "Validar logica de negocio",
+        "func": "\nconst { valorBD, estado, valor } = msg.req.body;\nconst porcentaje = (85 * valorBD) / 100;\nmsg.error = false;\n\nmsg.payload= {\n  valorBD:valorBD,\n  estado:estado,\n  valor:valor,\n  porcentaje:porcentaje\n}\n\nif (estado === \"Usado\") {\n  if (valor < porcentaje ) {\n    msg.error = true;\n    msg.ayuda = \"El valor de la moto usada no puede ser menor al 85%.\";\n  }\n}\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 880,
+        "wires": [
+            [
+                "cdcff1699ee922c4"
+            ]
+        ]
+    },
+    {
+        "id": "9b07c994e5d573ee",
+        "type": "function",
+        "z": "a435f4aaa9701cc9",
+        "name": "function 19",
+        "func": "msg.payload = {error:true,ayuda: \"El vehiculo tiene un precio superior a 250.000.000\"}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 1100,
+        "wires": [
+            [
+                "214c2fc3ad4d2be0"
+            ]
+        ]
+    },
+    {
+        "id": "cdcff1699ee922c4",
+        "type": "switch",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "property": "error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "false"
+            },
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 870,
+        "y": 900,
+        "wires": [
+            [
+                "b28303620bc5fef5"
+            ],
+            [
+                "2d98e8a2fa29abc9"
+            ]
+        ]
+    },
+    {
+        "id": "214c2fc3ad4d2be0",
+        "type": "http response",
+        "z": "a435f4aaa9701cc9",
+        "name": "400",
+        "statusCode": "400",
+        "headers": {},
+        "x": 910,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "b28303620bc5fef5",
+        "type": "switch",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "property": "req.body.tipo",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Moto",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 810,
+        "y": 780,
+        "wires": [
+            [
+                "cf90789f4f2d91d5"
+            ],
+            [
+                "75674e49361583b1"
+            ]
+        ]
+    },
+    {
+        "id": "2d98e8a2fa29abc9",
+        "type": "function",
+        "z": "a435f4aaa9701cc9",
+        "name": "function 26",
+        "func": "msg.payload = {error:true,ayuda: msg.ayuda}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1090,
+        "y": 960,
+        "wires": [
+            [
+                "681711e49db51d32"
+            ]
+        ]
+    },
+    {
+        "id": "cf90789f4f2d91d5",
+        "type": "function",
+        "z": "a435f4aaa9701cc9",
+        "name": "function 17",
+        "func": "\nif (msg.req.body.cilindraje > 400 ){\n    msg.error = true\n    msg.ayuda = \"La moto tiene mayor cilindraje al permitido\"\n}else{\n    msg.error = false\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 700,
+        "wires": [
+            [
+                "a8a6e4f72a275316"
+            ]
+        ]
+    },
+    {
+        "id": "75674e49361583b1",
+        "type": "MSSQL",
+        "z": "a435f4aaa9701cc9",
+        "mssqlCN": "ac775d3dfe8342d1",
+        "name": "",
+        "outField": "reqbd",
+        "returnType": 0,
+        "throwErrors": 1,
+        "query": "crearVehiculo",
+        "modeOpt": "",
+        "modeOptType": "execute",
+        "queryOpt": "payload",
+        "queryOptType": "editor",
+        "paramsOpt": "",
+        "paramsOptType": "editor",
+        "rows": "rows",
+        "rowsType": "msg",
+        "parseMustache": false,
+        "params": [
+            {
+                "output": false,
+                "name": "tipo",
+                "type": "varchar(40)",
+                "valueType": "msg",
+                "value": "req.body.tipo",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "modelo",
+                "type": "varchar(40)",
+                "valueType": "msg",
+                "value": "req.body.modelo",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "cilindraje",
+                "type": "int",
+                "valueType": "msg",
+                "value": "req.body.cilindraje",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "numeroVelocidades",
+                "type": "int",
+                "valueType": "msg",
+                "value": "req.body.numeroVelocidades",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "color",
+                "type": "varchar(40)",
+                "valueType": "msg",
+                "value": "req.body.color",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "kilometraje",
+                "type": "int",
+                "valueType": "msg",
+                "value": "req.body.kilometraje",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "valor",
+                "type": "decimal",
+                "valueType": "msg",
+                "value": "req.body.valor",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "Imagen",
+                "type": "varchar(500)",
+                "valueType": "msg",
+                "value": "req.body.imagen",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "Estado",
+                "type": "varchar(40)",
+                "valueType": "msg",
+                "value": "req.body.estado",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            }
+        ],
+        "x": 1100,
+        "y": 820,
+        "wires": [
+            [
+                "7af9b8caad7f3ea9"
+            ]
+        ]
+    },
+    {
+        "id": "681711e49db51d32",
+        "type": "http response",
+        "z": "a435f4aaa9701cc9",
+        "name": "400",
+        "statusCode": "400",
+        "headers": {},
+        "x": 1250,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "a8a6e4f72a275316",
+        "type": "switch",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "property": "error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 990,
+        "y": 700,
+        "wires": [
+            [
+                "8a47eee908b7be3b"
+            ],
+            [
+                "a8ab3d8780276dbc"
+            ]
+        ]
+    },
+    {
+        "id": "7af9b8caad7f3ea9",
+        "type": "function",
+        "z": "a435f4aaa9701cc9",
+        "name": "function 16",
+        "func": "msg.payload = {error:false, data : 'Registro cargado con id ' +msg.reqbd[0].VehiculoID }\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1290,
+        "y": 820,
+        "wires": [
+            [
+                "228cb7693dee55b5"
+            ]
+        ]
+    },
+    {
+        "id": "8a47eee908b7be3b",
+        "type": "function",
+        "z": "a435f4aaa9701cc9",
+        "name": "function 18",
+        "func": "msg.payload = {error:true,ayuda: msg.ayuda}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1230,
+        "y": 600,
+        "wires": [
+            [
+                "819a8a6725c6d058"
+            ]
+        ]
+    },
+    {
+        "id": "a8ab3d8780276dbc",
+        "type": "MSSQL",
+        "z": "a435f4aaa9701cc9",
+        "mssqlCN": "ac775d3dfe8342d1",
+        "name": "",
+        "outField": "reqbd",
+        "returnType": 0,
+        "throwErrors": 1,
+        "query": "crearVehiculo",
+        "modeOpt": "",
+        "modeOptType": "execute",
+        "queryOpt": "payload",
+        "queryOptType": "editor",
+        "paramsOpt": "",
+        "paramsOptType": "editor",
+        "rows": "rows",
+        "rowsType": "msg",
+        "parseMustache": false,
+        "params": [
+            {
+                "output": false,
+                "name": "tipo",
+                "type": "varchar(40)",
+                "valueType": "msg",
+                "value": "req.body.tipo",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "modelo",
+                "type": "varchar(40)",
+                "valueType": "msg",
+                "value": "req.body.modelo",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "cilindraje",
+                "type": "int",
+                "valueType": "msg",
+                "value": "req.body.cilindraje",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "numeroVelocidades",
+                "type": "int",
+                "valueType": "msg",
+                "value": "req.body.numeroVelocidades",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "color",
+                "type": "varchar(40)",
+                "valueType": "msg",
+                "value": "req.body.color",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "kilometraje",
+                "type": "int",
+                "valueType": "msg",
+                "value": "req.body.kilometraje",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "valor",
+                "type": "decimal",
+                "valueType": "msg",
+                "value": "req.body.valor",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "Imagen",
+                "type": "varchar(500)",
+                "valueType": "msg",
+                "value": "req.body.imagen",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "Estado",
+                "type": "varchar(40)",
+                "valueType": "msg",
+                "value": "req.body.estado",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            }
+        ],
+        "x": 1240,
+        "y": 700,
+        "wires": [
+            [
+                "7af9b8caad7f3ea9"
+            ]
+        ]
+    },
+    {
+        "id": "228cb7693dee55b5",
+        "type": "http response",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "statusCode": "200",
+        "headers": {},
+        "x": 1580,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "819a8a6725c6d058",
+        "type": "http response",
+        "z": "a435f4aaa9701cc9",
+        "name": "400",
+        "statusCode": "400",
+        "headers": {},
+        "x": 1430,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "624c628929c886bc",
+        "type": "catch",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 180,
+        "y": 60,
+        "wires": [
+            [
+                "5e0ff50f8daaaad8",
+                "cce9a44878ab212f"
+            ]
+        ]
+    },
+    {
+        "id": "5e0ff50f8daaaad8",
+        "type": "function",
+        "z": "a435f4aaa9701cc9",
+        "name": "function 11",
+        "func": "msg.payload = {error:true,ayuda:msg.error.message}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 60,
+        "wires": [
+            [
+                "5d63b2c18ad07182"
+            ]
+        ]
+    },
+    {
+        "id": "cce9a44878ab212f",
+        "type": "debug",
+        "z": "a435f4aaa9701cc9",
+        "name": "debug 309",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 370,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "5d63b2c18ad07182",
+        "type": "http response",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "statusCode": "400",
+        "headers": {},
+        "x": 740,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "9dd23e60c1dcee42",
+        "type": "http in",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "url": "/api/Usuario",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 190,
+        "y": 140,
+        "wires": [
+            [
+                "e3dcec923023cfac"
+            ]
+        ]
+    },
+    {
+        "id": "e3dcec923023cfac",
+        "type": "MSSQL",
+        "z": "a435f4aaa9701cc9",
+        "mssqlCN": "ac775d3dfe8342d1",
+        "name": "",
+        "outField": "reqbd",
+        "returnType": 0,
+        "throwErrors": 1,
+        "query": "buscarUsuarios",
+        "modeOpt": "",
+        "modeOptType": "execute",
+        "queryOpt": "payload",
+        "queryOptType": "editor",
+        "paramsOpt": "",
+        "paramsOptType": "editor",
+        "rows": "rows",
+        "rowsType": "msg",
+        "parseMustache": true,
+        "params": [
+            {
+                "output": false,
+                "name": "email",
+                "type": "VARCHAR(100)",
+                "valueType": "msg",
+                "value": "req.body.email",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "password",
+                "type": "VARCHAR(100)",
+                "valueType": "msg",
+                "value": "req.body.password",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            }
+        ],
+        "x": 400,
+        "y": 140,
+        "wires": [
+            [
+                "bfba4790363cf35a",
+                "21821327b351487c"
+            ]
+        ]
+    },
+    {
+        "id": "bfba4790363cf35a",
+        "type": "switch",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "property": "reqbd.length",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 570,
+        "y": 140,
+        "wires": [
+            [
+                "1b24157471d753e0"
+            ],
+            [
+                "460d812f4abae961"
+            ]
+        ]
+    },
+    {
+        "id": "21821327b351487c",
+        "type": "debug",
+        "z": "a435f4aaa9701cc9",
+        "name": "debug 306",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "1b24157471d753e0",
+        "type": "function",
+        "z": "a435f4aaa9701cc9",
+        "name": "function 10",
+        "func": "msg.payload = {error:false,ayuda:\"LogeoExitoso\", data : msg.reqbd }\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 120,
+        "wires": [
+            [
+                "8650f60a55c9aade"
+            ]
+        ]
+    },
+    {
+        "id": "460d812f4abae961",
+        "type": "function",
+        "z": "a435f4aaa9701cc9",
+        "name": "function 9",
+        "func": "msg.payload = {error:true,ayuda:\"Usuario o Contraseña incorrecta\" }\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 208,
+        "wires": [
+            [
+                "0a872090af2ed9f2"
+            ]
+        ]
+    },
+    {
+        "id": "8650f60a55c9aade",
+        "type": "http response",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 950,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "0a872090af2ed9f2",
+        "type": "http response",
+        "z": "a435f4aaa9701cc9",
+        "name": "400",
+        "statusCode": "400",
+        "headers": {},
+        "x": 890,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "b4980e68bf9825bf",
+        "type": "http in",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "url": "/api/Vehiculos",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 190,
+        "y": 480,
+        "wires": [
+            [
+                "17b4436146f2e876"
+            ]
+        ]
+    },
+    {
+        "id": "17b4436146f2e876",
+        "type": "MSSQL",
+        "z": "a435f4aaa9701cc9",
+        "mssqlCN": "ac775d3dfe8342d1",
+        "name": "",
+        "outField": "reqbd",
+        "returnType": 0,
+        "throwErrors": 1,
+        "query": "buscarVehiculos",
+        "modeOpt": "",
+        "modeOptType": "execute",
+        "queryOpt": "payload",
+        "queryOptType": "editor",
+        "paramsOpt": "",
+        "paramsOptType": "none",
+        "rows": "rows",
+        "rowsType": "msg",
+        "parseMustache": true,
+        "params": [],
+        "x": 400,
+        "y": 480,
+        "wires": [
+            [
+                "3eaead4514753222",
+                "a1b9a00085687593"
+            ]
+        ]
+    },
+    {
+        "id": "3eaead4514753222",
+        "type": "switch",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "property": "reqbd.length",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gte",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 570,
+        "y": 480,
+        "wires": [
+            [
+                "b4b549a850623089"
+            ],
+            [
+                "9b60635e910ba024"
+            ]
+        ]
+    },
+    {
+        "id": "a1b9a00085687593",
+        "type": "debug",
+        "z": "a435f4aaa9701cc9",
+        "name": "debug 308",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "b4b549a850623089",
+        "type": "function",
+        "z": "a435f4aaa9701cc9",
+        "name": "function 14",
+        "func": "msg.payload = {error:false, data : msg.reqbd }\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 460,
+        "wires": [
+            [
+                "6584d42c28d77f8e"
+            ]
+        ]
+    },
+    {
+        "id": "9b60635e910ba024",
+        "type": "function",
+        "z": "a435f4aaa9701cc9",
+        "name": "function 13",
+        "func": "msg.payload = {error:true,ayuda: \"No se detectan vehiculos a mostrar\" }\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 548,
+        "wires": [
+            [
+                "70399dea1c6daa6b"
+            ]
+        ]
+    },
+    {
+        "id": "6584d42c28d77f8e",
+        "type": "http response",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "statusCode": "200",
+        "headers": {},
+        "x": 960,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "70399dea1c6daa6b",
+        "type": "http response",
+        "z": "a435f4aaa9701cc9",
+        "name": "400",
+        "statusCode": "400",
+        "headers": {},
+        "x": 930,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "3b5c2b103d48a21e",
+        "type": "http in",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "url": "/api/Vehiculos/crear",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 190,
+        "y": 880,
+        "wires": [
+            [
+                "b530de30a6e7c3b1"
+            ]
+        ]
+    },
+    {
+        "id": "caae486823e0b3aa",
+        "type": "http in",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "url": "/api/Vehiculos/editar",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 170,
+        "y": 1280,
+        "wires": [
+            [
+                "e6d03e5547e8a3ec"
+            ]
+        ]
+    },
+    {
+        "id": "e6d03e5547e8a3ec",
+        "type": "switch",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "property": "req.body.kilometraje",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "lt",
+                "v": "250000000",
+                "vt": "num"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 510,
+        "y": 1280,
+        "wires": [
+            [
+                "c8139b93e9c859ea"
+            ],
+            [
+                "124f21c209f92ec2"
+            ]
+        ]
+    },
+    {
+        "id": "c8139b93e9c859ea",
+        "type": "switch",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "property": "req.body.tipo",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Moto",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 710,
+        "y": 1260,
+        "wires": [
+            [
+                "eec9758adee9d33d"
+            ],
+            [
+                "672ca007d8c1664e"
+            ]
+        ]
+    },
+    {
+        "id": "124f21c209f92ec2",
+        "type": "function",
+        "z": "a435f4aaa9701cc9",
+        "name": "function 20",
+        "func": "msg.payload = {error:true,ayuda: \"El vehiculo tiene un precio superior a 250.000.000\"}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 1400,
+        "wires": [
+            [
+                "b8abed0df3bbc955"
+            ]
+        ]
+    },
+    {
+        "id": "eec9758adee9d33d",
+        "type": "function",
+        "z": "a435f4aaa9701cc9",
+        "name": "function 21",
+        "func": "\nif (msg.req.body.cilindraje > 400 ){\n    msg.error = true\n    msg.ayuda = \"La moto tiene mayor cilindraje al permitido\"\n}else{\n    msg.error = false\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 1180,
+        "wires": [
+            [
+                "7b0e18ed37356fc3"
+            ]
+        ]
+    },
+    {
+        "id": "672ca007d8c1664e",
+        "type": "MSSQL",
+        "z": "a435f4aaa9701cc9",
+        "mssqlCN": "ac775d3dfe8342d1",
+        "name": "",
+        "outField": "reqbd",
+        "returnType": 0,
+        "throwErrors": 1,
+        "query": "editarVehiculo",
+        "modeOpt": "",
+        "modeOptType": "execute",
+        "queryOpt": "payload",
+        "queryOptType": "editor",
+        "paramsOpt": "",
+        "paramsOptType": "editor",
+        "rows": "rows",
+        "rowsType": "msg",
+        "parseMustache": false,
+        "params": [
+            {
+                "output": false,
+                "name": "tipo",
+                "type": "varchar(40)",
+                "valueType": "msg",
+                "value": "req.body.tipo",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "modelo",
+                "type": "varchar(40)",
+                "valueType": "msg",
+                "value": "req.body.modelo",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "cilindraje",
+                "type": "int",
+                "valueType": "msg",
+                "value": "req.body.cilindraje",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "numeroVelocidades",
+                "type": "int",
+                "valueType": "msg",
+                "value": "req.body.numeroVelocidades",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "color",
+                "type": "varchar(40)",
+                "valueType": "msg",
+                "value": "req.body.color",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "kilometraje",
+                "type": "int",
+                "valueType": "msg",
+                "value": "req.body.kilometraje",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "valor",
+                "type": "decimal",
+                "valueType": "msg",
+                "value": "req.body.valor",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "Imagen",
+                "type": "varchar(500)",
+                "valueType": "msg",
+                "value": "req.body.imagen",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "Estado",
+                "type": "varchar(40)",
+                "valueType": "msg",
+                "value": "req.body.estado",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "VehiculoID",
+                "type": "int",
+                "valueType": "msg",
+                "value": "req.body.VehiculoID",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            }
+        ],
+        "x": 1020,
+        "y": 1280,
+        "wires": [
+            [
+                "7a4263f0a716d404"
+            ]
+        ]
+    },
+    {
+        "id": "b8abed0df3bbc955",
+        "type": "http response",
+        "z": "a435f4aaa9701cc9",
+        "name": "400",
+        "statusCode": "400",
+        "headers": {},
+        "x": 1070,
+        "y": 1400,
+        "wires": []
+    },
+    {
+        "id": "7b0e18ed37356fc3",
+        "type": "switch",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "property": "error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 910,
+        "y": 1160,
+        "wires": [
+            [
+                "d40b634035aa1db2"
+            ],
+            [
+                "ac2d9164fae055e0"
+            ]
+        ]
+    },
+    {
+        "id": "7a4263f0a716d404",
+        "type": "function",
+        "z": "a435f4aaa9701cc9",
+        "name": "function 22",
+        "func": "msg.payload = {error:false, data : 'Se edito registro con id ' +msg.reqbd[0].idVehiculo }\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1270,
+        "y": 1280,
+        "wires": [
+            [
+                "f5ecff04482600bb",
+                "a3cc2d8f99757a2b"
+            ]
+        ]
+    },
+    {
+        "id": "d40b634035aa1db2",
+        "type": "function",
+        "z": "a435f4aaa9701cc9",
+        "name": "function 23",
+        "func": "msg.payload = {error:true,ayuda: msg.ayuda}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1150,
+        "y": 1060,
+        "wires": [
+            [
+                "222286237c2d56d4"
+            ]
+        ]
+    },
+    {
+        "id": "ac2d9164fae055e0",
+        "type": "MSSQL",
+        "z": "a435f4aaa9701cc9",
+        "mssqlCN": "ac775d3dfe8342d1",
+        "name": "",
+        "outField": "reqbd",
+        "returnType": 0,
+        "throwErrors": 1,
+        "query": "editarVehiculo",
+        "modeOpt": "",
+        "modeOptType": "execute",
+        "queryOpt": "payload",
+        "queryOptType": "editor",
+        "paramsOpt": "",
+        "paramsOptType": "editor",
+        "rows": "rows",
+        "rowsType": "msg",
+        "parseMustache": false,
+        "params": [
+            {
+                "output": false,
+                "name": "tipo",
+                "type": "varchar(40)",
+                "valueType": "msg",
+                "value": "req.body.tipo",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "modelo",
+                "type": "varchar(40)",
+                "valueType": "msg",
+                "value": "req.body.modelo",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "cilindraje",
+                "type": "int",
+                "valueType": "msg",
+                "value": "req.body.cilindraje",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "numeroVelocidades",
+                "type": "int",
+                "valueType": "msg",
+                "value": "req.body.numeroVelocidades",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "color",
+                "type": "varchar(40)",
+                "valueType": "msg",
+                "value": "req.body.color",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "kilometraje",
+                "type": "int",
+                "valueType": "msg",
+                "value": "req.body.kilometraje",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "valor",
+                "type": "decimal",
+                "valueType": "msg",
+                "value": "req.body.valor",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "Imagen",
+                "type": "varchar(500)",
+                "valueType": "msg",
+                "value": "req.body.imagen",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "Estado",
+                "type": "varchar(40)",
+                "valueType": "msg",
+                "value": "req.body.estado",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "VehiculoID",
+                "type": "int",
+                "valueType": "msg",
+                "value": "req.body.VehiculoID",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            }
+        ],
+        "x": 1120,
+        "y": 1160,
+        "wires": [
+            [
+                "7a4263f0a716d404"
+            ]
+        ]
+    },
+    {
+        "id": "f5ecff04482600bb",
+        "type": "http response",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "statusCode": "200",
+        "headers": {},
+        "x": 1540,
+        "y": 1280,
+        "wires": []
+    },
+    {
+        "id": "a3cc2d8f99757a2b",
+        "type": "debug",
+        "z": "a435f4aaa9701cc9",
+        "name": "debug 312",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1430,
+        "y": 1200,
+        "wires": []
+    },
+    {
+        "id": "222286237c2d56d4",
+        "type": "http response",
+        "z": "a435f4aaa9701cc9",
+        "name": "400",
+        "statusCode": "400",
+        "headers": {},
+        "x": 1350,
+        "y": 1060,
+        "wires": []
+    },
+    {
+        "id": "a92bf1b379cdddaa",
+        "type": "http in",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "url": "/api/Ventas/Agregar",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 190,
+        "y": 1680,
+        "wires": [
+            [
+                "49ed1ffe955e72ad",
+                "91f87c3529456aaf"
+            ]
+        ]
+    },
+    {
+        "id": "49ed1ffe955e72ad",
+        "type": "debug",
+        "z": "a435f4aaa9701cc9",
+        "name": "debug 310",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "req.body",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 370,
+        "y": 1600,
+        "wires": []
+    },
+    {
+        "id": "91f87c3529456aaf",
+        "type": "function",
+        "z": "a435f4aaa9701cc9",
+        "name": "function 25",
+        "func": "  function FormatearFecha(dateString) {\n    const [day, month, year] = dateString.split(\"/\");\n    const date = new Date(`${year}-${month}-${day}T00:00:00.000Z`);    \n    const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} 00:00:00.000`;\n    return formattedDate;\n  }\n\nlet fechaSinFormato =  msg.req.body.FechaNacimiento\nmsg.fechaNacimiento = FormatearFecha(fechaSinFormato)\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 1680,
+        "wires": [
+            [
+                "8443b41af3c0fc1e",
+                "7713d4129249b337"
+            ]
+        ]
+    },
+    {
+        "id": "8443b41af3c0fc1e",
+        "type": "MSSQL",
+        "z": "a435f4aaa9701cc9",
+        "mssqlCN": "ac775d3dfe8342d1",
+        "name": "",
+        "outField": "reqbd",
+        "returnType": 0,
+        "throwErrors": 1,
+        "query": "agregarVenta",
+        "modeOpt": "",
+        "modeOptType": "execute",
+        "queryOpt": "payload",
+        "queryOptType": "editor",
+        "paramsOpt": "",
+        "paramsOptType": "editor",
+        "rows": "rows",
+        "rowsType": "msg",
+        "parseMustache": false,
+        "params": [
+            {
+                "output": false,
+                "name": "nombre",
+                "type": "VARCHAR(50)",
+                "valueType": "msg",
+                "value": "req.body.nombre",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "idVehiculo",
+                "type": "INT",
+                "valueType": "msg",
+                "value": "req.body.VehiculoID",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "TipoDocumentoIdentidad",
+                "type": "VARCHAR(50)",
+                "valueType": "msg",
+                "value": "req.body.TipoDocumentoIdentidad",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "DocumentoIdentidad",
+                "type": "VARCHAR(50)",
+                "valueType": "msg",
+                "value": "req.body.DocumentoIdentidad",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "Telefono",
+                "type": "VARCHAR(50)",
+                "valueType": "msg",
+                "value": "req.body.Telefono",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "Email",
+                "type": "VARCHAR(50)",
+                "valueType": "msg",
+                "value": "req.body.Email",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "Direccion",
+                "type": "VARCHAR(50)",
+                "valueType": "msg",
+                "value": "req.body.Direccion",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            },
+            {
+                "output": false,
+                "name": "FechaNacimiento",
+                "type": "VARCHAR(50)",
+                "valueType": "msg",
+                "value": "fechaNacimiento",
+                "options": {
+                    "nullable": true,
+                    "primary": false,
+                    "identity": false,
+                    "readOnly": false
+                }
+            }
+        ],
+        "x": 700,
+        "y": 1660,
+        "wires": [
+            [
+                "8447ca13d68a7c16"
+            ]
+        ]
+    },
+    {
+        "id": "7713d4129249b337",
+        "type": "debug",
+        "z": "a435f4aaa9701cc9",
+        "name": "debug 311",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 622,
+        "y": 1597,
+        "wires": []
+    },
+    {
+        "id": "8447ca13d68a7c16",
+        "type": "function",
+        "z": "a435f4aaa9701cc9",
+        "name": "function 24",
+        "func": "msg.payload = {error:false, ayuda : 'Se vendio exitosamente el vehiculo N° ' +msg.reqbd[0].idVehiculo }\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 1620,
+        "wires": [
+            [
+                "b769bba9fd26337b"
+            ]
+        ]
+    },
+    {
+        "id": "b769bba9fd26337b",
+        "type": "http response",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "statusCode": "200",
+        "headers": {},
+        "x": 1140,
+        "y": 1660,
+        "wires": []
+    },
+    {
+        "id": "4ec03e071b69e903",
+        "type": "http in",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "url": "/api/Ventas",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 160,
+        "y": 1860,
+        "wires": [
+            [
+                "f44882f5aa0944f7"
+            ]
+        ]
+    },
+    {
+        "id": "f44882f5aa0944f7",
+        "type": "MSSQL",
+        "z": "a435f4aaa9701cc9",
+        "mssqlCN": "ac775d3dfe8342d1",
+        "name": "",
+        "outField": "reqBD",
+        "returnType": 0,
+        "throwErrors": 1,
+        "query": "getVentas",
+        "modeOpt": "",
+        "modeOptType": "execute",
+        "queryOpt": "payload",
+        "queryOptType": "editor",
+        "paramsOpt": "",
+        "paramsOptType": "editor",
+        "rows": "rows",
+        "rowsType": "msg",
+        "parseMustache": false,
+        "params": [],
+        "x": 500,
+        "y": 1860,
+        "wires": [
+            [
+                "c3551be001b21111"
+            ]
+        ]
+    },
+    {
+        "id": "c3551be001b21111",
+        "type": "function",
+        "z": "a435f4aaa9701cc9",
+        "name": "function 28",
+        "func": "msg.payload = {\n    error:false,\n    ayuda: \"Reporte Ventas\",\n    data : msg.reqBD\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 1860,
+        "wires": [
+            [
+                "bd8fa737e0754b81"
+            ]
+        ]
+    },
+    {
+        "id": "bd8fa737e0754b81",
+        "type": "http response",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "statusCode": "200",
+        "headers": {},
+        "x": 900,
+        "y": 1860,
+        "wires": []
+    },
+    {
+        "id": "7d033f149a483fb8",
+        "type": "http in",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "url": "/api/Precio/listaPrecios",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 216,
+        "y": 2000,
+        "wires": [
+            [
+                "8c258bb1dfa5fd1e"
+            ]
+        ]
+    },
+    {
+        "id": "8c258bb1dfa5fd1e",
+        "type": "MSSQL",
+        "z": "a435f4aaa9701cc9",
+        "mssqlCN": "ac775d3dfe8342d1",
+        "name": "",
+        "outField": "reqBD",
+        "returnType": 0,
+        "throwErrors": 1,
+        "query": "buscarListaPrecios",
+        "modeOpt": "",
+        "modeOptType": "execute",
+        "queryOpt": "payload",
+        "queryOptType": "editor",
+        "paramsOpt": "",
+        "paramsOptType": "editor",
+        "rows": "rows",
+        "rowsType": "msg",
+        "parseMustache": false,
+        "params": [],
+        "x": 516,
+        "y": 2000,
+        "wires": [
+            [
+                "7629f9343ef237b6"
+            ]
+        ]
+    },
+    {
+        "id": "7629f9343ef237b6",
+        "type": "function",
+        "z": "a435f4aaa9701cc9",
+        "name": "function 27",
+        "func": "msg.payload = {\n    error:false,\n    ayuda: \"Precios Encontrados\",\n    data : msg.reqBD\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 2000,
+        "wires": [
+            [
+                "d1220aed017b00fc"
+            ]
+        ]
+    },
+    {
+        "id": "d1220aed017b00fc",
+        "type": "http response",
+        "z": "a435f4aaa9701cc9",
+        "name": "",
+        "statusCode": "200",
+        "headers": {},
+        "x": 960,
+        "y": 2000,
+        "wires": []
+    },
+    {
+        "id": "ac775d3dfe8342d1",
+        "type": "MSSQL-CN",
+        "tdsVersion": "7_4",
+        "name": "",
+        "server": "DESKTOP-3BLNNFO",
+        "port": "1433",
+        "encyption": true,
+        "trustServerCertificate": true,
+        "database": "SincoAYF",
+        "useUTC": true,
+        "connectTimeout": "15000",
+        "requestTimeout": "15000",
+        "cancelTimeout": "5000",
+        "pool": "5",
+        "parseJSON": false,
+        "enableArithAbort": true,
+        "readOnlyIntent": false
+    }
+]
